@@ -1,17 +1,19 @@
 name: deploy to lambda
-on: [push]
+on:
+  push:
+    branches: main
+
 jobs:
   deploy_source:
     name: deploy lambda from source
     runs-on: ubuntu-latest
     steps:
-      - name: checkout source code
-        uses: actions/checkout@v1
-      - name: default deploy
-        uses: appleboy/lambda-action@master
+      - uses: actions/checkout@v1
+      - run: zip lambda.zip index.mjs
+      - uses: yvesgurcan/deploy-lambda-function
         with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: us-west-1
-          function_name: whoseTurnIsIt
-          source: index.js
+          AWS_SECRET_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-west-1
+          function-name: whoseTurnIsIt
+          package: lambda.zip
