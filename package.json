@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "zip lambda.zip index.mjs; aws lambda update-function-code --function whoseTurnIsIt --zip-file fileb://lambda.zip; rm lambda.zip"
   },
   "author": "",
   "license": "ISC"
