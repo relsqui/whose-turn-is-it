@@ -16,7 +16,6 @@ const nextTurn = (turnState) => {
 }
 
 const renderState = (oldState, baseUrl) => {
-    // TODO: render a form, update the next URL live as it's filled
     const newState = nextTurn(oldState);
     const newUrl = baseUrl + encodeState(newState);
     return `
