@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - run: zip lambda.zip index.mjs
-      - uses: yvesgurcan/deploy-lambda-function@0.0.5
+      - uses: yvesgurcan/deploy-lambda-function@v0.0.5
         with:
           AWS_SECRET_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
