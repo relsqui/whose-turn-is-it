@@ -16,15 +16,15 @@ const nextTurn = (turnState) => {
 }
 
 const renderState = (oldState, baseUrl, event) => {
-    const newState = nextTurn(oldState);
+    // const newState = nextTurn(oldState);
     // const newUrl = baseUrl + encodeState(newState);
     const lines = [
         "<html><body>",
         // `<p>${JSON.stringify(newState)}</p>`,
         // `<p><a href="${newUrl}">${newUrl}</a></p>`,
-        `<p>${JSON.stringify(event)}</p>)}`
+        `<p>${JSON.stringify(event)}</p>`,
         "</body></html>"
-    ].join("\n");
+    ];
     return lines.join("\n");
 }
 
