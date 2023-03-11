@@ -16,13 +16,13 @@ const nextTurn = (turnState) => {
 }
 
 const renderState = (oldState, baseUrl, event) => {
-    // const newState = nextTurn(oldState);
-    // const newUrl = baseUrl + encodeState(newState);
+    const newState = nextTurn(oldState);
+    const newUrl = baseUrl + encodeState(newState);
     const lines = [
         "<html><body>",
-        // `<p>${JSON.stringify(newState)}</p>`,
-        // `<p><a href="${newUrl}">${newUrl}</a></p>`,
-        `<p>${JSON.stringify(event)}</p>`,
+        `<p>${JSON.stringify(newState)}</p>`,
+        `<h2>It's <b>${newState.names[newState.index]}'s</b> turn.</h2>`,
+        `<p>Next URL: <a href="${newUrl}">${newUrl}</a></p>`,
         "</body></html>"
     ];
     return lines.join("\n");
