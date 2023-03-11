@@ -15,15 +15,17 @@ const nextTurn = (turnState) => {
     return {index: (index + 1) % names.length, names};
 }
 
-const renderState = (oldState, baseUrl) => {
+const renderState = (oldState, baseUrl, event) => {
     const newState = nextTurn(oldState);
-    const newUrl = baseUrl + encodeState(newState);
-    return `
-    <html><body>
-    <p>${JSON.stringify(newState)}</p>
-    <p><a href="${newUrl}">${newUrl}</a></p>
-    </body></html>
-    `;
+    // const newUrl = baseUrl + encodeState(newState);
+    const lines = [
+        "<html><body>",
+        // `<p>${JSON.stringify(newState)}</p>`,
+        // `<p><a href="${newUrl}">${newUrl}</a></p>`,
+        `<p>${JSON.stringify(event)}</p>)}`
+        "</body></html>"
+    ].join("\n");
+    return lines.join("\n");
 }
 
 export const handler = async (event, context, callback) => {
@@ -33,7 +35,7 @@ export const handler = async (event, context, callback) => {
   callback(null, {
     statusCode: 200,
     headers: {"content-type": "text/html"},
-    body: renderState(oldState, baseUrl)
+    body: renderState(oldState, baseUrl, event)
   })
 }
 
