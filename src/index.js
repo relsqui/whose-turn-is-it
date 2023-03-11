@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderToString } from 'react-dom/server';
+import { readFileSync } from 'fs';
 
 const defaultState = {names: ["Apple", "Banana", "Cherry", ""], index: 0};
 
@@ -40,20 +40,23 @@ class TurnForm extends React.Component {
 }
 
 function decodeState (stateString64) {
-    const stateString = Buffer.from(stateString64, 'base64').toString('utf-8');
-    const [index, ...names] = stateString.split(",");
-    return {index, names};
+  if (!stateString64) {
+    return defaultState;
+  }
+  const stateString = Buffer.from(stateString64, 'base64').toString('utf-8');
+  const [index, ...names] = stateString.split(",");
+  return {index, names};
 }
 
 function encodeState (turnState) {
-    const stateString = [turnState.index, ...turnState.names].join(",");
-    return Buffer.from(stateString).toString('base64');
+  const stateString = [turnState.index, ...turnState.names].join(",");
+  return Buffer.from(stateString).toString('base64');
 }
 
 function nextTurn (turnState)  {
-    var {names, index} = turnState;
-    index = Number(index);
-    return {index: (index + 1) % names.length, names};
+  var {names, index} = turnState;
+  index = Number(index);
+  return {index: (index + 1) % names.length, names};
 }
 
 function renderState (oldState, baseUrl, event) {
@@ -70,15 +73,15 @@ function renderState (oldState, baseUrl, event) {
 }
 
 function buildResponse (base64) {
-  const oldState = base64 ? decodeState(base64) : defaultState;
   return {
     statusCode: 200,
     headers: {"content-type": "text/html"},
-    body: renderToString(<TurnForm initialState={oldState} />)
+    body: readFileSync("src/index.html").toString()
   }
 }
 
 export async function handler (event, context, callback) {
+  // called from lambda, render the html doc
   const base64 = event.rawPath.substring(1);
   const baseUrl = 'https://' + event.headers.host + '/';
   callback(null, buildResponse());
@@ -88,4 +91,12 @@ function main () {
     console.log(buildResponse(process.argv[2]).body)
 }
 
-main();
+if (typeof document !== 'undefined') {
+  // called from html doc
+  const rootNode = document.getElementById('like-button-root');
+  const root = ReactDOM.createRoot(rootNode);
+  root.render(React.createElement(TurnForm, props={initialState: defaultState}));
+} else {
+  // local testing
+  main();
+}

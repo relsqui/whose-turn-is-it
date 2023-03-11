@@ -4,8 +4,9 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "deploy": "zip -r lambda.zip .; aws lambda update-function-code --function whoseTurnIsIt --zip-file fileb://lambda.zip >/dev/null && echo 'Uploaded!'; rm lambda.zip",
-    "watch": "npx babel --watch src --out-dir . --presets babel-preset-react-app/prod >/dev/null &"
+    "deploy": "zip -qr lambda.zip .; aws lambda update-function-code --function whoseTurnIsIt --zip-file fileb://lambda.zip >/dev/null && echo 'Uploaded!'; rm lambda.zip",
+    "start": "node index.js",
+    "watch": "npx babel --watch src --out-dir . --presets babel-preset-react-app/prod >/dev/null 2>&1 &"
   },
   "author": "",
   "license": "ISC",
