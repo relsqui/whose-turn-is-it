@@ -2,10 +2,19 @@
   "name": "whose-turn",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "deploy": "zip lambda.zip index.mjs; aws lambda update-function-code --function whoseTurnIsIt --zip-file fileb://lambda.zip; rm lambda.zip"
+    "deploy": "zip -r lambda.zip .; aws lambda update-function-code --function whoseTurnIsIt --zip-file fileb://lambda.zip >/dev/null && echo 'Uploaded!'; rm lambda.zip",
+    "watch": "npx babel --watch src --out-dir . --presets babel-preset-react-app/prod >/dev/null &"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@babel/cli": "^7.21.0",
+    "babel-preset-react-app": "^10.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+  }
 }
