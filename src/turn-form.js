@@ -73,14 +73,21 @@ function renderState (oldState, baseUrl, event) {
 }
 
 function buildResponse (event) {
-  return {
+  const response = {
     statusCode: 200,
     headers: {
-      "content-type": "text/html",
-      "content-security-policy": "script-src 'unsafe-inline' https://unpkg.com https://whose-turn.finn.fun;"
-    },
-    body: readFileSync("src/index.html").toString()
+      "content-security-policy": "default-src 'unsafe-inline' https://whose-turn.finn.fun; script-src 'unsafe-inline' https://unpkg.com https://whose-turn.finn.fun;"
+    }
+  };
+  if (event.rawPath == '/dist/turn-form.js') {
+    response.headers["content-type"] = "text/javascript"
+    response.body = readFileSync("dist/turn-form.js").toString()
+  } else {
+    response.headers["content-type"] = "text/html"
+    response.body = readFileSync("src/index.html").toString()
   }
+  console.log(response);
+  return response;
 }
 
 function main () {
