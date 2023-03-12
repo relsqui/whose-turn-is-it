@@ -5,13 +5,11 @@ const Buffer = require('buffer/').Buffer;
 const defaultState = {names: ["Apple", "Banana", "Cherry", ""], index: 0};
 
 function decodeState (base64) {
-  if (!base64) {
-    return defaultState;
-  }
+  if (!base64) return defaultState;
   const stateString = Buffer.from(base64, 'base64').toString('utf-8');
   var [index, ...names] = stateString.split(",");
   names.push("");
-  return {index, names};
+  return {index: Number(index), names};
 }
 
 function encodeState(state) {
@@ -21,16 +19,15 @@ function encodeState(state) {
 
 function NextLink({turnState, baseUrl}) {
   const names = turnState.names.filter(name => name.length > 0);
-  const index = (turnState.index + 1) % names.length;
+  const index = (Number(turnState.index) + 1) % names.length;
   const base64 = encodeState({index, names});
   const nextURI = `${baseUrl}?z=${base64}`;
   return <>
     <p>Next Link: <a href={nextURI}>{nextURI}</a></p>
-    <pre>{JSON.stringify({index, names})}</pre>
   </>
 }
 
-function TurnForm({initialstate}) {
+function TurnForm({initialState}) {
   const [state, setState] = React.useState(initialState);
 
   function handleNameChange(index, event) {
@@ -57,12 +54,12 @@ function TurnForm({initialstate}) {
   });
 
   return <>
-    <form key="form">
-      {nameInputs}
-      <textarea rows="10" cols="80" key="debug" readOnly value={JSON.stringify(state)} />
-    </form>
     <h1>It's <b>{state.names[state.index]}'s</b> turn.</h1>
-    <NextLink turnState={{index: state.index, names: state.names}} baseUrl={baseUrl} />
+    <NextLink turnState={state} baseUrl={baseUrl} />
+    <form key="form">
+      <p>Adjust the rotation:</p>
+      {nameInputs}
+    </form>
   </>
 }
 
