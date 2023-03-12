@@ -2,11 +2,11 @@
   "name": "whose-turn",
   "version": "0.1.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
     "deploy": "zip -qr lambda.zip .; aws lambda update-function-code --function whoseTurnIsIt --zip-file fileb://lambda.zip >/dev/null && echo 'Uploaded!'; rm lambda.zip",
-    "start": "node index.js",
-    "watch": "npx babel --watch src --out-dir . --presets babel-preset-react-app/prod >/dev/null 2>&1 &"
+    "start": "node dist/turn-form.js",
+    "watch": "npx babel --watch src --out-dir dist --presets babel-preset-react-app/prod >/dev/null 2>&1 &"
   },
   "author": "",
   "license": "ISC",

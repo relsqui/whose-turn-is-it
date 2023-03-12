@@ -72,19 +72,14 @@ function renderState (oldState, baseUrl, event) {
     return lines.join("\n");
 }
 
-function buildResponse (base64) {
+function buildResponse (event) {
   return {
     statusCode: 200,
-    headers: {"content-type": "text/html"},
+    headers: {
+      "Content-Type": "text/html",
+    },
     body: readFileSync("src/index.html").toString()
   }
-}
-
-export async function handler (event, context, callback) {
-  // called from lambda, render the html doc
-  const base64 = event.rawPath.substring(1);
-  const baseUrl = 'https://' + event.headers.host + '/';
-  callback(null, buildResponse());
 }
 
 function main () {
