@@ -5,12 +5,12 @@
   "private": "true",
   "scripts": {
     "start": "webpack serve --mode development",
-    "build": "webpack --mode production",
-    "deploy": "aws s3 sync dist/ s3://whose-turn --acl public-read"
+    "deploy": "webpack --mode production && aws s3 sync dist/ s3://whose-turn --acl public-read"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "buffer": "^6.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

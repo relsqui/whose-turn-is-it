@@ -1,42 +1,51 @@
+const { useEffect } = require('react');
 const React = require('react');
 const ReactDOM = require('react-dom/client');
+const Buffer = require('buffer/').Buffer;
 
 const defaultState = {names: ["Apple", "Banana", "Cherry", ""], index: 0};
 
-class TurnForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = props.initialState ?? defaultState;
-    this.handleNameChange = this.handleNameChange.bind(this);
-    this.handleButtonChange = this.handleButtonChange.bind(this);
+function NextLink({turnState}) {
+  const stateString = [turnState.index, ...turnState.names].join(",");
+  const base64 = Buffer.from(stateString).toString('base64');
+  return <p>Next Link: <a href="">{base64}</a></p>
+}
+
+function TurnForm() {
+  const [state, setState] = React.useState(defaultState);
+  // const nameRef = React.useMemo(() => Array(state.names.length).fill(0).map(i => React.useRef()));
+
+  function handleNameChange(index, event) {
+    return (event) => {
+      var names = state.names.slice();
+      names[index] = event.target.value;
+      names = names.filter(name => name.length > 0);
+      names.push("");
+      setState({...state, names});
+    }
   }
 
-  handleNameChange(index, event) {
-    var names = this.state.names.slice();
-    names[index] = event.target.value;
-    names = names.filter(name => name.length > 0);
-    names.push("");
-    this.setState({...this.state, names});
+  function handleButtonChange(index) {
+    return () => {
+      setState({...state, index});
+    }
   }
 
-  handleButtonChange(index, event) {
-    this.setState({...this.state, index: index});
-  }
+  const nameInputs = state.names.map((name, index) => {
+    return <div key={`name${index}`}>
+      <input type="radio" key={`radio${index}`} value={index} checked={index === state.index} index={index} onChange={handleButtonChange(index)} />
+      <input type="text" key={`input${index}`} value={name} index={index} onChange={handleNameChange(index)} />
+    </div>
+  });
 
-  render() {
-    const nameInputs = this.state.names.map((name, index) => {
-      return <p key="{index}">
-        <input type="radio" key="radio{index}" value={index} checked={index === this.state.index} onChange={this.handleButtonChange.bind(this, index)} />
-        <input type="text" key="name{index}" value={name} onChange={this.handleNameChange.bind(this, index)} />
-      </p>
-    });
-    return <html><body>
-      <form key="form" onSubmit={this.handleSubmit}>
-        {nameInputs}
-        <textarea rows="10" cols="80" key="debug" readOnly value={JSON.stringify(this.state)} />
-      </form>
-    </body></html>;
-  }
+  return <>
+    <form key="form">
+      {nameInputs}
+      <textarea rows="10" cols="80" key="debug" readOnly value={JSON.stringify(state)} />
+    </form>
+    <h1>It's <b>{state.names[state.index]}'s</b> turn.</h1>
+    <NextLink turnState={{index: state.index, names: state.names}} />
+  </>
 }
 
 function decodeState (stateString64) {
@@ -46,11 +55,6 @@ function decodeState (stateString64) {
   const stateString = Buffer.from(stateString64, 'base64').toString('utf-8');
   const [index, ...names] = stateString.split(",");
   return {index, names};
-}
-
-function encodeState (turnState) {
-  const stateString = [turnState.index, ...turnState.names].join(",");
-  return Buffer.from(stateString).toString('base64');
 }
 
 function nextTurn (turnState) {
