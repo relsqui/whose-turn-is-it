@@ -15,19 +15,18 @@ function decodeState (base64) {
 }
 
 function encodeState(state) {
-  const names = state.names.filter(name => name.length > 0);
-  const index = state.index >= names.length ? names.length - 1 : state.index;
-  const stateString = [index, ...names].join(",");
+  const stateString = [state.index, ...state.names].join(",");
   return Buffer.from(stateString).toString('base64');
 }
 
 function NextLink({turnState, baseUrl}) {
-  const state = {...turnState, index: (turnState.index + 1) % turnState.names.length};
-  const base64 = encodeState(state);
+  const names = turnState.names.filter(name => name.length > 0);
+  const index = (turnState.index + 1) % names.length;
+  const base64 = encodeState({index, names});
   const nextURI = `${baseUrl}?z=${base64}`;
   return <>
     <p>Next Link: <a href={nextURI}>{nextURI}</a></p>
-    <pre>{JSON.stringify(state)}</pre>
+    <pre>{JSON.stringify({index, names})}</pre>
   </>
 }
 
