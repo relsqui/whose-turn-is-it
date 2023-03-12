@@ -1,5 +1,5 @@
-import React from 'react';
-import { readFileSync } from 'fs';
+const React = require('react');
+const { readFileSync } = require('fs');
 
 const defaultState = {names: ["Apple", "Banana", "Cherry", ""], index: 0};
 
@@ -53,7 +53,7 @@ function encodeState (turnState) {
   return Buffer.from(stateString).toString('base64');
 }
 
-function nextTurn (turnState)  {
+function nextTurn (turnState) {
   var {names, index} = turnState;
   index = Number(index);
   return {index: (index + 1) % names.length, names};
@@ -76,7 +76,8 @@ function buildResponse (event) {
   return {
     statusCode: 200,
     headers: {
-      "Content-Type": "text/html",
+      "content-type": "text/html",
+      "content-security-policy": "script-src 'unsafe-inline' https://unpkg.com https://whose-turn.finn.fun;"
     },
     body: readFileSync("src/index.html").toString()
   }
@@ -95,3 +96,5 @@ if (typeof document !== 'undefined') {
   // local testing
   main();
 }
+
+module.exports = {buildResponse};
