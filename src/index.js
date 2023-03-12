@@ -1,19 +1,38 @@
-const { useEffect } = require('react');
 const React = require('react');
 const ReactDOM = require('react-dom/client');
 const Buffer = require('buffer/').Buffer;
 
 const defaultState = {names: ["Apple", "Banana", "Cherry", ""], index: 0};
 
-function NextLink({turnState}) {
-  const stateString = [turnState.index, ...turnState.names].join(",");
-  const base64 = Buffer.from(stateString).toString('base64');
-  return <p>Next Link: <a href="">{base64}</a></p>
+function decodeState (base64) {
+  if (!base64) {
+    return defaultState;
+  }
+  const stateString = Buffer.from(base64, 'base64').toString('utf-8');
+  var [index, ...names] = stateString.split(",");
+  names.push("");
+  return {index, names};
 }
 
-function TurnForm() {
-  const [state, setState] = React.useState(defaultState);
-  // const nameRef = React.useMemo(() => Array(state.names.length).fill(0).map(i => React.useRef()));
+function encodeState(state) {
+  const names = state.names.filter(name => name.length > 0);
+  const index = state.index >= names.length ? names.length - 1 : state.index;
+  const stateString = [index, ...names].join(",");
+  return Buffer.from(stateString).toString('base64');
+}
+
+function NextLink({turnState, baseUrl}) {
+  const state = {...turnState, index: (turnState.index + 1) % turnState.names.length};
+  const base64 = encodeState(state);
+  const nextURI = `${baseUrl}?z=${base64}`;
+  return <>
+    <p>Next Link: <a href={nextURI}>{nextURI}</a></p>
+    <pre>{JSON.stringify(state)}</pre>
+  </>
+}
+
+function TurnForm({initialstate}) {
+  const [state, setState] = React.useState(initialState);
 
   function handleNameChange(index, event) {
     return (event) => {
@@ -44,25 +63,12 @@ function TurnForm() {
       <textarea rows="10" cols="80" key="debug" readOnly value={JSON.stringify(state)} />
     </form>
     <h1>It's <b>{state.names[state.index]}'s</b> turn.</h1>
-    <NextLink turnState={{index: state.index, names: state.names}} />
+    <NextLink turnState={{index: state.index, names: state.names}} baseUrl={baseUrl} />
   </>
 }
 
-function decodeState (stateString64) {
-  if (!stateString64) {
-    return defaultState;
-  }
-  const stateString = Buffer.from(stateString64, 'base64').toString('utf-8');
-  const [index, ...names] = stateString.split(",");
-  return {index, names};
-}
-
-function nextTurn (turnState) {
-  var {names, index} = turnState;
-  index = Number(index);
-  return {index: (index + 1) % names.length, names};
-}
-
+const [baseUrl, base64] = window.location.href.split("?z=");
+const initialState = decodeState(base64);
 const rootNode = document.getElementById('root');
 const root = ReactDOM.createRoot(rootNode);
-root.render(React.createElement(TurnForm, props={initialState: defaultState}));
+root.render(React.createElement(TurnForm, props = {initialState}));
