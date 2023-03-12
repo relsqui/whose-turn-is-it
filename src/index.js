@@ -1,5 +1,5 @@
 const React = require('react');
-const { readFileSync } = require('fs');
+const ReactDOM = require('react-dom/client');
 
 const defaultState = {names: ["Apple", "Banana", "Cherry", ""], index: 0};
 
@@ -59,49 +59,6 @@ function nextTurn (turnState) {
   return {index: (index + 1) % names.length, names};
 }
 
-function renderState (oldState, baseUrl, event) {
-    const newState = nextTurn(oldState);
-    const newUrl = baseUrl + encodeState(newState);
-    const lines = [
-        "<html><body>",
-        `<!-- <p>${JSON.stringify(newState)}</p> -->`,
-        `<h2>It's <b>${newState.names[newState.index]}'s</b> turn.</h2>`,
-        `<p>Next URL: <a href="${newUrl}">${newUrl}</a></p>`,
-        "</body></html>"
-    ];
-    return lines.join("\n");
-}
-
-function buildResponse (event) {
-  const response = {
-    statusCode: 200,
-    headers: {
-      "content-security-policy": "default-src 'unsafe-inline' https://whose-turn.finn.fun; script-src 'unsafe-inline' https://unpkg.com https://whose-turn.finn.fun;"
-    }
-  };
-  if (event.rawPath == '/dist/turn-form.js') {
-    response.headers["content-type"] = "text/javascript"
-    response.body = readFileSync("dist/turn-form.js").toString()
-  } else {
-    response.headers["content-type"] = "text/html"
-    response.body = readFileSync("src/index.html").toString()
-  }
-  console.log(response);
-  return response;
-}
-
-function main () {
-    console.log(buildResponse(process.argv[2]).body)
-}
-
-if (typeof document !== 'undefined') {
-  // called from html doc
-  const rootNode = document.getElementById('like-button-root');
-  const root = ReactDOM.createRoot(rootNode);
-  root.render(React.createElement(TurnForm, props={initialState: defaultState}));
-} else {
-  // local testing
-  main();
-}
-
-module.exports = {buildResponse};
+const rootNode = document.getElementById('root');
+const root = ReactDOM.createRoot(rootNode);
+root.render(React.createElement(TurnForm, props={initialState: defaultState}));

@@ -2,20 +2,26 @@
   "name": "whose-turn",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "private": "true",
   "scripts": {
-    "deploy": "zip -qr lambda.zip .; aws lambda update-function-code --function whoseTurnIsIt --zip-file fileb://lambda.zip >/dev/null && echo 'Uploaded!'; rm lambda.zip",
-    "start": "node dist/turn-form.js",
-    "watch": "npx babel --watch src --out-dir dist --presets babel-preset-react-app/prod >/dev/null 2>&1 &"
+    "start": "webpack serve --mode development",
+    "build": "webpack --mode production",
+    "deploy": "aws s3 sync dist/ s3://whose-turn --acl public-read"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/cli": "^7.21.0",
-    "babel-preset-react-app": "^10.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.21.0",
+    "@babel/core": "^7.21.0",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
+    "babel-loader": "^9.1.2",
+    "webpack": "^5.76.1",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
   }
 }
