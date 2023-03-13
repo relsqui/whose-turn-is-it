@@ -36,3 +36,7 @@ resource "aws_s3_object" "this" {
     key = each.value
     source = "${local.dist_dir}${each.value}"
 }
+
+output "url" {
+  value = "http://${aws_s3_bucket_website_configuration.this.website_endpoint}"
+}
