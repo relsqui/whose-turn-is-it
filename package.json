@@ -5,7 +5,8 @@
   "private": "true",
   "scripts": {
     "start": "webpack serve --mode development",
-    "deploy": "webpack --mode production && terraform -chdir=infrastructure apply"
+    "deploy": "webpack --mode production && terraform -chdir=infrastructure apply",
+    "teardown": "terraform -chdir=infrastructure destroy"
   },
   "author": "",
   "license": "ISC",
