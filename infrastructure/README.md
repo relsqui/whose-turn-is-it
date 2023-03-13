@@ -1,12 +1,9 @@
 # Terraform Deployment
 
-This infrastructure code deploys the React app as a static site in AWS S3.
-
 ## AWS Setup
 
 If you already have local AWS credentials which give you at least as much access as the policy below, you can skip this section.
 
-1. Make an AWS account, if necessary.
 1. Install the AWS CLI.
 1. In AWS IAM, create a user.
    * Under permissions, add the inline policy below.
@@ -50,14 +47,8 @@ Replace YOUR-BUCKET-NAME with the actual bucket name you want to use. Bucket nam
 
 ### The State File
 
-Terraform creates a `terraform.tfstate` file in the infrastructure directory which keeps track of the last known state of the real infrastructure. Don't delete it, and don't check it into source control.
+Terraform creates a `terraform.tfstate` file in the infrastructure directory which keeps track of the last known state of the real infrastructure.
+
+Don't delete the state file, or Terraform will try to create the same bucket again and fail, and you'll have to delete or re-import the resources manually.
 
 If you're using this for more than prototyping, add a `backend` block to `main.tf` to store the state somewhere safer, like another s3 bucket. (Don't use the app bucket.)
-
-## Deploying and Destroying
-
-`npm run deploy` packs up the app for production, uploads it to s3, and outputs the public URL.
-
-You can also destroy the S3 bucket and files with `npm run teardown`.
-
-Both commands will show you what they're going to do and require confirmation.
