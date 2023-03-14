@@ -2,11 +2,14 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Buffer } from 'buffer'
 
-const defaultState = { names: ['Apple', 'Banana', 'Cherry', ''], index: 0 }
-
 interface TurnState {
   index: number
   names: string[]
+}
+
+const defaultState = {
+  index: 0,
+  names: ['Apple', 'Banana', 'Cherry', '']
 }
 
 function decodeState (base64: string): TurnState {
