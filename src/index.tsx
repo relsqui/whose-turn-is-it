@@ -1,53 +1,51 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { Buffer } from 'buffer';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { Buffer } from 'buffer'
 
-const defaultState = {names: ["Apple", "Banana", "Cherry", ""], index: 0};
+const defaultState = { names: ['Apple', 'Banana', 'Cherry', ''], index: 0 }
 
 interface TurnState {
-  index: number,
+  index: number
   names: string[]
 }
 
-function decodeState (base64: string) {
-  if (!base64) return defaultState;
-  const stateString = Buffer.from(base64, 'base64').toString('utf-8');
-  var [index, ...names] = stateString.split(",");
-  names.push("");
-  return {index: Number(index), names};
+function decodeState (base64: string): TurnState {
+  if (base64 === undefined) return defaultState
+  const stateString = Buffer.from(base64, 'base64').toString('utf-8')
+  const [index, ...names] = stateString.split(',')
+  names.push('')
+  return { index: Number(index), names }
 }
 
-function encodeState(state: TurnState) {
-  const stateString = [state.index, ...state.names].join(",");
-  return Buffer.from(stateString).toString('base64');
+function encodeState (state: TurnState): string {
+  const stateString = [state.index, ...state.names].join(',')
+  return Buffer.from(stateString).toString('base64')
 }
 
-function NextLink({turnState, baseUrl}) {
-  const names = turnState.names.filter((name: string) => name.length > 0);
-  const index = (Number(turnState.index) + 1) % names.length;
-  const base64 = encodeState({index, names});
-  const nextURI = `${baseUrl}?z=${base64}`;
-  return <>
-    <p>Next Link: <a href={nextURI}>{nextURI}</a></p>
-  </>
+function NextLink ({ turnState, baseUrl }) { // ?? what's the return type of <p>
+  const names = turnState.names.filter((name: string) => name.length > 0)
+  const index = (Number(turnState.index) + 1) % names.length
+  const base64 = encodeState({ index, names })
+  const nextURI = `${baseUrl}?z=${base64}`
+  return <p>Next Link: <a href={nextURI}>{nextURI}</a></p>
 }
 
-function TurnForm({initialState}) {
-  const [state, setState] = React.useState(initialState);
+function TurnForm ({ initialState }) {
+  const [state, setState] = React.useState(initialState)
 
-  function handleNameChange(index: number) {
+  function handleNameChange (index: number) {
     return (event: React.ChangeEvent) => {
-      var names = state.names.slice();
-      names[index] = (event.currentTarget as HTMLInputElement).value;
-      names = names.filter((name: string) => name.length > 0);
-      names.push("");
-      setState({...state, names});
+      let names = state.names.slice()
+      names[index] = (event.currentTarget as HTMLInputElement).value
+      names = names.filter((name: string) => name.length > 0)
+      names.push('')
+      setState({ ...state, names })
     }
   }
 
-  function handleButtonChange(index: number) {
+  function handleButtonChange (index: number) {
     return () => {
-      setState({...state, index});
+      setState({ ...state, index })
     }
   }
 
@@ -56,7 +54,7 @@ function TurnForm({initialState}) {
       <input type="radio" key={`radio${index}`} value={index} checked={index === state.index} data-index={index} onChange={handleButtonChange(index)} />
       <input type="text" key={`input${index}`} value={name} data-index={index} onChange={handleNameChange(index)} />
     </div>
-  });
+  })
 
   return <>
     <h1>It's <b>{state.names[state.index]}'s</b> turn.</h1>
@@ -68,8 +66,8 @@ function TurnForm({initialState}) {
   </>
 }
 
-const [baseUrl, base64] = window.location.href.split("?z=");
-const initialState = decodeState(base64);
-const rootNode = document.getElementById('root');
-const root = ReactDOM.createRoot(rootNode!);
-root.render(React.createElement(TurnForm, {initialState}));
+const [baseUrl, base64] = window.location.href.split('?z=')
+const initialState = decodeState(base64)
+const rootNode = document.getElementById('root')
+const root = ReactDOM.createRoot(rootNode!)
+root.render(React.createElement(TurnForm, { initialState }))
