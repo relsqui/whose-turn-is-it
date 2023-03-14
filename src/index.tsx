@@ -7,10 +7,7 @@ interface TurnState {
   names: string[]
 }
 
-const defaultState = {
-  index: 0,
-  names: ['Apple', 'Banana', 'Cherry', '']
-}
+const defaultState = { index: 0, names: ['Apple', 'Banana', 'Cherry', ''] }
 
 function decodeState (base64: string): TurnState {
   if (base64 === undefined) return defaultState
