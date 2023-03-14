@@ -4,7 +4,7 @@ This is a tiny React app that lets you input a set of names and whose turn it is
 
 * `npm install`
 * `npm start` to run the local dev server
-* Edit the code in `src/index.js` and the template in `dist/index.html`
+* Edit the code in `src/index.tsx` and the template in `dist/index.html`
 * Follow the instructions in [infrastructure](infrastructure) to enable:
   * `npm run deploy` to upload the app to S3
   * `npm run teardown` to remove the S3 deployment
