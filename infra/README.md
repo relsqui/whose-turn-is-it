@@ -47,7 +47,7 @@ Replace YOUR-BUCKET-NAME with the actual bucket name you want to use. Bucket nam
 
 ### The State File
 
-Terraform creates a `terraform.tfstate` file in the infrastructure directory which keeps track of the last known state of the real infrastructure.
+Terraform creates a `terraform.tfstate` file in the infra directory which keeps track of the last known state of the real infrastructure.
 
 Don't delete the state file, or Terraform will try to create the same bucket again and fail, and you'll have to delete or re-import the resources manually.
 

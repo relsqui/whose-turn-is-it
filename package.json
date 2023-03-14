@@ -5,9 +5,9 @@
   "private": "true",
   "scripts": {
     "start": "webpack serve --mode development",
-    "lint": "terraform -chdir=infrastructure fmt; npx eslint src",
-    "deploy": "webpack --mode production && terraform -chdir=infrastructure apply",
-    "teardown": "terraform -chdir=infrastructure destroy"
+    "lint": "terraform -chdir=infra fmt; npx eslint src",
+    "deploy": "webpack --mode production && terraform -chdir=infra apply",
+    "teardown": "terraform -chdir=infra destroy"
   },
   "author": "",
   "license": "ISC",
