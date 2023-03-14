@@ -25,7 +25,7 @@ function encodeState (state: TurnState): string {
   return Buffer.from(stateString).toString('base64')
 }
 
-function NextLink ({ turnState, baseUrl }) { // ?? what's the return type of <p>
+function NextLink ({ turnState, baseUrl }): React.ReactElement {
   const names = turnState.names.filter((name: string) => name.length > 0)
   const index = (Number(turnState.index) + 1) % names.length
   const base64 = encodeState({ index, names })
