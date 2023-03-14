@@ -25,7 +25,7 @@ function encodeState (state: TurnState): string {
   return Buffer.from(stateString).toString('base64')
 }
 
-function NextLink ({ turnState, baseUrl }): React.ReactElement {
+function NextLink ({ turnState, baseUrl }: { turnState: TurnState, baseUrl: string }): React.ReactElement {
   const names = turnState.names.filter((name: string) => name.length > 0)
   const index = (Number(turnState.index) + 1) % names.length
   const base64 = encodeState({ index, names })
@@ -33,7 +33,7 @@ function NextLink ({ turnState, baseUrl }): React.ReactElement {
   return <p>Next Link: <a href={nextURI}>{nextURI}</a></p>
 }
 
-function TurnForm ({ initialState }): React.ReactElement {
+function TurnForm ({ initialState }: { initialState: TurnState }): React.ReactElement {
   const [state, setState] = React.useState(initialState)
 
   function handleNameChange (index: number) {
