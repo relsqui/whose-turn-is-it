@@ -5,6 +5,7 @@
   "private": "true",
   "scripts": {
     "start": "webpack serve --mode development",
+    "lint": "npx eslint src",
     "deploy": "webpack --mode production && terraform -chdir=infrastructure apply",
     "teardown": "terraform -chdir=infrastructure destroy"
   },
