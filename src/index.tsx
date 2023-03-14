@@ -33,7 +33,7 @@ function NextLink ({ turnState, baseUrl }): React.ReactElement {
   return <p>Next Link: <a href={nextURI}>{nextURI}</a></p>
 }
 
-function TurnForm ({ initialState }) {
+function TurnForm ({ initialState }): React.ReactElement {
   const [state, setState] = React.useState(initialState)
 
   function handleNameChange (index: number) {
@@ -72,5 +72,7 @@ function TurnForm ({ initialState }) {
 const [baseUrl, base64] = window.location.href.split('?z=')
 const initialState = decodeState(base64)
 const rootNode = document.getElementById('root')
-const root = ReactDOM.createRoot(rootNode!)
-root.render(React.createElement(TurnForm, { initialState }))
+if (rootNode !== null) {
+  const root = ReactDOM.createRoot(rootNode)
+  root.render(React.createElement(TurnForm, { initialState }))
+}
